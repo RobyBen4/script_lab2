@@ -46,7 +46,7 @@ def fit(f, x, y,dy, stima=[1,0]):
     return m , q, dm, dq
 
 #---CHI2 CLASSICO----
-def chi2(x, y, dy, m, q):
+def chi_quadro(x, y, dy, m, q):
     return np.sum((y-(x*m+q))**2/dy**2)
 
 #---TEST DI IPOTESI PER ACCETTARE O RIGETTARE IL FIT---
