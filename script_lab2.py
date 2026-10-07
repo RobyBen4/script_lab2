@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
+from scipy.optimize import curve_fit
 from scipy.odr import ODR, Model, RealData
 from scipy.stats import chi2
 
@@ -15,6 +16,7 @@ def retta(param, x):
     m , q = param
     return m*x +q
 
+#---CHI2 CON ERRORI SULLA X----
 def x_quadro(x, y, dx, dy, m ,q ):
     residui = (y-m*x-q)**2
     errore = dy**2+(m**2)*dx**2
@@ -25,7 +27,7 @@ def x_quadro(x, y, dx, dy, m ,q ):
 def residui(x, y, dx, dy, m ,q):
     return (y-m*x-q)/np.sqrt(dy**2+(m**2)*dx**2)
 
-#---MODALITA DI FIT NEL CASO DI ERRORI SIA SU X CHE SU Y----
+#---MODALITA DI FIT LINEARE NEL CASO DI ERRORI SIA SU X CHE SU Y----
 def fitODR(x, y , dx, dy, stima=(1,0)):
     modello= Model(retta)
     dati = RealData(x, y, sx=dx, sy=dy)
@@ -36,10 +38,21 @@ def fitODR(x, y , dx, dy, stima=(1,0)):
     cov = out.cov_beta
     return m, q, dm, dq, cov
 
+#---MODALITA DI FIT LINEARE CON ERRORI SOLO SU Y-----   
+def fit(f, x, y, stima=[1,0], dy):
+    popt, pcov = curve_fit(f, x, y, stima, dy)
+    m, q = popt
+    dm,dq = np.sqrt(np.diag(pcov))
+    return m , q, dm, dq
+
+#---CHI2 CLASSICO----
+def chi2(x, y, dy, m, q):
+    return np.sum((y-(x*m+q))**2/dy**2)
+
 #---TEST DI IPOTESI PER ACCETTARE O RIGETTARE IL FIT---
 def valuta_fit(chi2_val, nu, alpha=0.05):
     chi2_ridotto = chi2_val / nu
-    p_value = 1 - chi2.cdf(chi2_val, nu)
+    p_value = chi2.sf(chi2_val, nu)
     if p_value< alpha:
         return chi2_ridotto, False
     else:
