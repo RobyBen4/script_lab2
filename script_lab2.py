@@ -39,7 +39,7 @@ def fitODR(x, y , dx, dy, stima=(1,0)):
     return m, q, dm, dq, cov
 
 #---MODALITA DI FIT LINEARE CON ERRORI SOLO SU Y-----   
-def fit(f, x, y, stima=[1,0], dy):
+def fit(f, x, y,dy, stima=[1,0]):
     popt, pcov = curve_fit(f, x, y, stima, dy)
     m, q = popt
     dm,dq = np.sqrt(np.diag(pcov))
