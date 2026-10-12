@@ -44,12 +44,19 @@ def fitODR(x, y , dx, dy, stima=(1,0)):
     cov = out.cov_beta
     return m, q, dm, dq, cov
 
-#---MODALITA DI FIT LINEARE CON ERRORI SOLO SU Y-----   
-def fit_lin(f, x, y,dy, stima=[1,0]):
-    popt, pcov = curve_fit(f, x, y, stima, dy)
-    m, q = popt
-    dm,dq = np.sqrt(np.diag(pcov))
-    return m , q, dm, dq
+#---MODALITA DI FIT GENERICO CON ERRORI SOLO SU Y-----   
+def fit(f, x, y,dy, stima=None):
+    popt, pcov = curve_fit(f, x, y, p0=stima, sigma=dy, absolute_sigma=True)
+    perr = np.sqrt(np.diag(pcov))
+    return popt, pcov, perr
+
+#---MODALITA DI FIT LINEARE CON ERRORI SOLO SU Y----
+def fit_lin_np(x, y, dy):
+    par, cov = np.polyfit(x, y, deg=1, w=1/dy, cov="unscaled" )
+    m, q = par
+    dm, dq = np.sqrt(np.diag(cov))
+    cov_p = cov[0,1]
+    return m, q, dm, dq, cov_p
 
 #---CHI2 CON SOLO ERRORI SU Y----
 def chi_quadro(f_teo, y, dy):
