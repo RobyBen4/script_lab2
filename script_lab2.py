@@ -33,17 +33,16 @@ def residui_y(y, f_teo, dy):
 
 
 
-#---MODALITA DI FIT NEL CASO DI ERRORI SIA SU X CHE SU Y, VA INSERITO UNA FUNZIONE CHE ABBIA COME UNICI ARGOMENTI LA TUPLA DEI PARAMETRI E UN ARRAY 
-# E INOLTRE VA SPECIFICATA UNA TUPLA CON UNA STIMA DEI PARAMETRI----
-def fitODR(f, x, y , dx, dy, stima=None):
-    modello= Model(f)
+#---MODALITA DI FIT LINEARE NEL CASO DI ERRORI SIA SU X CHE SU Y----
+def fitODR(x, y , dx, dy, stima=(1,0)):
+    modello= Model(retta)
     dati = RealData(x, y, sx=dx, sy=dy)
     odr = ODR(dati, modello, beta0=stima)
     out = odr.run()
-    popt = out.beta
-    perr = out.sd_beta
-    pcov = out.cov_beta
-    return popt, perr, pcov
+    m, q = out.beta
+    dm, dq = out.sd_beta
+    cov = out.cov_beta
+    return m, q, dm, dq, cov
 
 #---MODALITA DI FIT GENERICO CON ERRORI SOLO SU Y-----   
 def fit(f, x, y,dy, stima=None):
