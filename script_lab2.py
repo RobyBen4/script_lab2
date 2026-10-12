@@ -33,16 +33,17 @@ def residui_y(y, f_teo, dy):
 
 
 
-#---MODALITA DI FIT LINEARE NEL CASO DI ERRORI SIA SU X CHE SU Y----
-def fitODR(x, y , dx, dy, stima=(1,0)):
-    modello= Model(retta)
+#---MODALITA DI FIT NEL CASO DI ERRORI SIA SU X CHE SU Y, VA INSERITO UNA FUNZIONE CHE ABBIA COME UNICI ARGOMENTI LA TUPLA DEI PARAMETRI E UN ARRAY 
+# E INOLTRE VA SPECIFICATA UNA TUPLA CON UNA STIMA DEI PARAMETRI----
+def fitODR(f, x, y , dx, dy, stima=None):
+    modello= Model(f)
     dati = RealData(x, y, sx=dx, sy=dy)
     odr = ODR(dati, modello, beta0=stima)
     out = odr.run()
-    m, q = out.beta
-    dm, dq = out.sd_beta
-    cov = out.cov_beta
-    return m, q, dm, dq, cov
+    popt = out.beta
+    perr = out.sd_beta
+    pcov = out.cov_beta
+    return popt, perr, pcov
 
 #---MODALITA DI FIT GENERICO CON ERRORI SOLO SU Y-----   
 def fit(f, x, y,dy, stima=None):
@@ -94,10 +95,10 @@ if __name__ == "__main__":
     i_v, v_v, di_v, dv_v, nomi = ott_dati("/mnt/c/Users/robyb/OneDrive - Università di Napoli Federico II/exp1_lab2.xlsx", 2)
     
     #EFFETTUIAMO LA STIMA DEI PARAMETRI
-    R_m, q_m, dR_m, dq_m, cov_m= fitODR(i_m, v_m, dev_std_unif(di_m), dev_std_unif(dv_m))
+    (R_m, q_m), (dR_m, dq_m), cov_m= fitODR(retta, i_m, v_m, dev_std_unif(di_m), dev_std_unif(dv_m), stima=(1,0))
     print(f"il parametro R nel fit a monte risulta essere:({R_m:.3f}±{dR_m:.3f})kΩ\\L'intercetta risulta essere:({q_m:.3f}±{dq_m:.3f})V")
     
-    R_v, q_v, dR_v, dq_v, cov_v= fitODR(i_v, v_v, dev_std_unif(di_v), dev_std_unif(dv_v))
+    (R_v, q_v), (dR_v, dq_v), cov_v= fitODR(retta, i_v, v_v, dev_std_unif(di_v), dev_std_unif(dv_v), stima=(1,0))
     print(f"il parametro R nel fit a monte risulta essere:({R_v:.3f}±{dR_v:.3f})kΩ\\L'intercetta risulta essere:({q_v:.3f}±{dq_v:.3f})V")
     
     #STIMIAMO IL CHI2 E LA BONTA DEL FIT E COEFFICIENTE DI CORRELAZIONE
@@ -130,9 +131,9 @@ if __name__ == "__main__":
 
     # RESIDUI
         
-    residui_monte = residui(i_m,v_m,dev_std_unif(di_m),dev_std_unif(dv_m),R_m, q_m)
+    residui_monte = residui_lin(i_m,v_m,dev_std_unif(di_m),dev_std_unif(dv_m),R_m, q_m)
         
-    residui_valle = residui(i_v, v_v, dev_std_unif(di_v), dev_std_unif(dv_v), R_v, q_v)
+    residui_valle = residui_lin(i_v, v_v, dev_std_unif(di_v), dev_std_unif(dv_v), R_v, q_v)
     
     
     #STIMA DEL VALORE VERO DELLA RESISTENZA USATA
