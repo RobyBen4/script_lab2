@@ -23,9 +23,15 @@ def x_quadro(x, y, dx, dy, m ,q ):
     return np.sum(residui/errore)
 
 
-#----UTILE PER OTTENERE SUBITO IL GRAFICO DEI REISDUI----
-def residui(x, y, dx, dy, m ,q):
-    return (y-m*x-q)/np.sqrt(dy**2+(m**2)*dx**2)
+#----UTILE PER OTTENERE SUBITO IL GRAFICO DEI REISDUI DI UN FIT LINEARE CON ERRORI SIA SU X CHE SU Y----
+def residui_lin(x, y, dx, dy, m ,q):
+    return (y-m*x-q)/np.sqrt(dy**2+(m**2)*dx**2)    
+
+#----GRAFICO RESIDUI DI UN FIT CON ERRORE SOLO SU Y----
+def residui_y(y, f_teo, dy):
+    return (y-f_teo)/dy
+
+
 
 #---MODALITA DI FIT LINEARE NEL CASO DI ERRORI SIA SU X CHE SU Y----
 def fitODR(x, y , dx, dy, stima=(1,0)):
@@ -45,9 +51,9 @@ def fit_lin(f, x, y,dy, stima=[1,0]):
     dm,dq = np.sqrt(np.diag(pcov))
     return m , q, dm, dq
 
-#---CHI2 CLASSICO----
-def chi_quadro(x, y, dy, m, q):
-    return np.sum((y-(x*m+q))**2/dy**2)
+#---CHI2 CON SOLO ERRORI SU Y----
+def chi_quadro(f_teo, y, dy):
+    return np.sum((y-(f_teo))**2/dy**2)
 
 #---TEST DI IPOTESI PER ACCETTARE O RIGETTARE IL FIT---
 def valuta_fit(chi2_val, nu, alpha=0.05):
