@@ -76,9 +76,9 @@ if __name__ == "__main__":
     
     
     #IMPORTIAMO I DATI DA EXCEL
-    i_m,v_m,di_m,dv_m , nomi= ott_dati("exp1_lab2.xlsx", 1)  
+    i_m,v_m,di_m,dv_m , nomi= ott_dati("/mnt/c/Users/robyb/OneDrive - Università di Napoli Federico II/exp1_lab2.xlsx", 1)  
     
-    i_v, v_v, di_v, dv_v, nomi = ott_dati("exp1_lab2.xlsx", 2)
+    i_v, v_v, di_v, dv_v, nomi = ott_dati("/mnt/c/Users/robyb/OneDrive - Università di Napoli Federico II/exp1_lab2.xlsx", 2)
     
     #EFFETTUIAMO LA STIMA DEI PARAMETRI
     R_m, q_m, dR_m, dq_m, cov_m= fitODR(i_m, v_m, dev_std_unif(di_m), dev_std_unif(dv_m))
