@@ -12,9 +12,8 @@ def ott_dati(excel,foglio):
     labels = list(df.columns)
     return x, y, dx, dy, labels
     
-def retta(param, x):
-    m , q = param
-    return m*x +q
+def retta(P, x):
+    return P[0]*x +P[1]
 
 #---CHI2 CON ERRORI SULLA X----
 def x_quadro(x, y, dx, dy, m ,q ):
@@ -38,6 +37,17 @@ def residui_y(y, f_teo, dy):
 def fitODR(f, x, y , dx, dy, stima=None):
     modello= Model(f)
     dati = RealData(x, y, sx=dx, sy=dy)
+
+    #IN QUESTO PASSAGGIO STO ANDANDO A INSERIRE UNA STIMA INIZIALE PER IL FIT, ALTRIMENTI QUEST'ULTIMO SE NON DOVESSERE RICEVERE NESSUNA STIMA SI BLOCCHEREBBE
+    if stima == None:
+        for n_par in range(1,20):
+            try:
+                f(np.ones(n_par),x[0])
+                stima = np.ones(n_par)
+                break
+            except (TypeError, IndexError):
+                continue
+    
     odr = ODR(dati, modello, beta0=stima)
     out = odr.run()
     popt = out.beta
@@ -48,7 +58,23 @@ def fitODR(f, x, y , dx, dy, stima=None):
 
 #---MODALITA DI FIT GENERICO CON ERRORI SOLO SU Y-----   
 def fit(f, x, y,dy, stima=None):
-    popt, pcov = curve_fit(f, x, y, p0=stima, sigma=dy, absolute_sigma=True)
+
+    if stima == None:
+            for n_par in range(1,20):
+                try:
+                    f(np.ones(n_par),x[0])
+                    stima = np.ones(n_par)
+                    break
+                except (TypeError, IndexError):
+                    continue
+
+    #IN QUESTO PASSAGGIO STO CONSENTENDO ALLA FUNZIONE CURVE_FIT DI LEGGERE UNA FUNZIONE SCRITTA PER IL COMANDO ODR, OSSIA CON I PARAMETRI IN UNA TUPLA.
+    #IL PROGRAMMA TENTA DI LEGGERE DALLA FUNZIONE I PARAMETRI, NON LI TROVA E CONTROLLA QUINDI I VALORI DELLA STIMA E DA ESSI ASSOCIA UN NUMERO DI PARAMETRI A CURVEFIT.
+    #SUCCESSIVAMENTE PER CALCOLARE LA FUNZIONE IMPACCHETTO I PARAMETRI IN UNA TUPLA CON * E RICHIAMO LA FUNZIONE SCRITTA PER ODR COSI DA NON DOVER SCRIVERE DUE FORMULE UGUALI.
+    def curvefit(x, *param):
+        return f(param, x)
+ 
+    popt, pcov = curve_fit(curvefit, x, y, p0=stima, sigma=dy, absolute_sigma=True)
     perr = np.sqrt(np.diag(pcov))
     return popt, pcov, perr
 
@@ -122,6 +148,7 @@ if __name__ == "__main__":
     else:
         print("Fit non accettabile")
         
+    (m,q), cov_q, (dm,dq)fit(retta, i_m, v_m, di_m)
     
     #---COEFFICIENTI DI CORRELAZIONE TRA I E V---
     rho_m = np.corrcoef(i_m, v_m)[0,1]
