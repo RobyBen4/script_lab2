@@ -24,7 +24,7 @@ Rx=(R_2/R_1)*R_star
 d_rel_R1 = dR_1/R_1 
 d_rel_R2 = dR_2/R_2
 d_rel_R_star = dR_star/R_star
-dRx=np.sqrt((((d_rel_R1)**2)+(d_rel_R2)**2))+((d_rel_R_star)**2))*R_x
+dRx=np.sqrt((((d_rel_R1)**2)+(d_rel_R2)**2))+((d_rel_R_star)**2)*Rx
 
 #best fit
 retta_best=retta((A,B),R)
@@ -58,7 +58,7 @@ else:
 residui=residui_y(I, retta_best, dI)
 
 #GRAFICO PLOT
-fig, (ax1,ax2) = plt.subplots(2,1 figsize = (8,10), sharex=False)
+fig, (ax1,ax2) = plt.subplots(2,1, figsize = (8,10), sharex=False)
 
 ax1.errorbar(
     R, I,
