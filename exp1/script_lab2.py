@@ -53,7 +53,7 @@ def fitODR(f, x, y , dx, dy, stima=None):
     popt = out.beta
     perr = out.sd_beta
     pcov = out.cov_beta
-    return popt, perr, pcov
+    return popt, pcov, perr
 
 
 #---MODALITA DI FIT GENERICO CON ERRORI SOLO SU Y-----   
@@ -117,15 +117,15 @@ if __name__ == "__main__":
     
     
     #IMPORTIAMO I DATI DA EXCEL
-    i_m,v_m,di_m,dv_m , nomi= ott_dati("/mnt/c/Users/robyb/OneDrive - Università di Napoli Federico II/exp1_lab2.xlsx", 1)  
+    (i_m,v_m,di_m,dv_m) , nomi= ott_dati("/mnt/c/Users/robyb/OneDrive - Università di Napoli Federico II/exp1_lab2.xlsx", 1)  
     
-    i_v, v_v, di_v, dv_v, nomi = ott_dati("/mnt/c/Users/robyb/OneDrive - Università di Napoli Federico II/exp1_lab2.xlsx", 2)
+    (i_v, v_v, di_v, dv_v), nomi = ott_dati("/mnt/c/Users/robyb/OneDrive - Università di Napoli Federico II/exp1_lab2.xlsx", 2)
     
     #EFFETTUIAMO LA STIMA DEI PARAMETRI
-    (R_m, q_m), (dR_m, dq_m), cov_m= fitODR(retta, i_m, v_m, dev_std_unif(di_m), dev_std_unif(dv_m), stima=(1,0))
+    (R_m, q_m), cov_m ,(dR_m, dq_m)= fitODR(retta, i_m, v_m, dev_std_unif(di_m), dev_std_unif(dv_m), stima=(1,0))
     print(f"il parametro R nel fit a monte risulta essere:({R_m:.3f}±{dR_m:.3f})kΩ\\L'intercetta risulta essere:({q_m:.3f}±{dq_m:.3f})V")
     
-    (R_v, q_v), (dR_v, dq_v), cov_v= fitODR(retta, i_v, v_v, dev_std_unif(di_v), dev_std_unif(dv_v), stima=(1,0))
+    (R_v, q_v), cov_v, (dR_v, dq_v)= fitODR(retta, i_v, v_v, dev_std_unif(di_v), dev_std_unif(dv_v), stima=(1,0))
     print(f"il parametro R nel fit a monte risulta essere:({R_v:.3f}±{dR_v:.3f})kΩ\\L'intercetta risulta essere:({q_v:.3f}±{dq_v:.3f})V")
     
     #STIMIAMO IL CHI2 E LA BONTA DEL FIT E COEFFICIENTE DI CORRELAZIONE

@@ -6,14 +6,14 @@ from scipy.odr import ODR, Model, RealData
 from scipy.stats import chi2
 from exp1.script_lab2 import ott_dati, consistenza, retta, residui_y, fit_lin, chi_quadro, valuta_fit
 
-excel="/mnt/c/Users/giova/OneDrive - Università di Napoli Federico II/Lab2exp2.xlsx"
-(R,I,dI),nomi=ott_dati(excel)
+excel="/mnt/c/Users/robyb/OneDrive - Università di Napoli Federico II/exp1_lab2.xlsx"
+(R,I,dI,x),nomi=ott_dati(excel, foglio=1)
 
-(A,B), cov, (dA,dB)=fit_lin(R, I, dI)
+A, B, dA, dB, cov =fit_lin(R, I, dI)
 
 R_star=-B/A
 
-dR_star=np.sqrt((1/A**2)*(dB**2)+(((B**2)/(A**4))*(dA**2)))+2*(-1/A)*(B/A**2)*cov[0,1]
+dR_star=np.sqrt((1/A**2)*(dB**2)+(((B**2)/(A**4))*(dA**2)))+2*(-1/A)*(B/A**2)*cov
 
 R_1=220
 R_2=120
@@ -67,10 +67,16 @@ ax1.errorbar(
     capsize=2, elinewidth=0.8, markersize=5, alpha=0.85,
     label= "Fit I Vs R"
 )
-
+ax1.axvline(R_star, color= "black", linestyle= "--")
 x_fit = np.linspace(0, R.max(), 200)
-y_fit = retta((R,I), x_fit)
-ax1.plot(x_fit,y_fit, "b-", linewidth =1.5)
+y_fit = retta((A,B), x_fit)
+ax1.plot(x_fit,y_fit, "b-", linewidth =1.5, zorder=1)
+ax1.scatter(R_star , retta((A,B),R_star), color="black", s=60 , label="Punto R*", zorder=3)
+ax1.set_xlabel(nomi[0])
+ax1.set_ylabel(nomi[1])
+ax1.set_title("Fit I Vs R")
+ax1.grid(True, alpha =0.3)
+ax1.legend()
 
 #GRAFICO RESIDUI
 ax2.axhline(0, color="black", linewidth=1)

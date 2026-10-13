@@ -6,7 +6,7 @@ from scipy.odr import ODR, Model, RealData
 from scipy.stats import chi2
 from exp1.script_lab2 import ott_dati, consistenza, retta, residui_lin, fitODR, x_quadro, valuta_fit
 
-excel="/mnt/c/Users/giova/OneDrive - Università di Napoli Federico II/Lab2exp2.xlsx"
+excel="/mnt/c/Users/robyb/OneDrive - Università di Napoli Federico II/exp1_lab2.xlsx"
 (I_r,V_r,dI_r, dV_r),nomi=ott_dati(excel, foglio=1)
 
 (A,B), cov, (dA,dB)=fitODR(retta, I_r, V_r, dI_r, dV_r)
@@ -34,7 +34,7 @@ dr_x = 1 #da vedere nella parte del ponte
 
 print(f"il generatore ideale nella configurazione con resistenza interna ε_T vale: ({B:.3f} +- {dB:.3f})V")
 print(f"la resistenza totale nella configurazione con resistenza interna R_T vale: ({A:.3f} +- {dA:.3f})Ω")
-print(f"la corrente di cortocircuito vale: ({I_cc_r:.3f}+-{dI_cc_r})A")
+print(f"la corrente di cortocircuito vale: ({I_cc_r:.3f}+-{dI_cc_r:.3f})A")
 
 
 l1 = consistenza(B, V_0, dB, 0)
@@ -64,13 +64,17 @@ ax1.errorbar(
     xerr=dI_r, yerr=dV_r,
     fmt="o", color="blue", ecolor="blue",
     capsize=2, elinewidth=0.8, markersize=5, alpha=0.85,
-    label= "Fit V_r Vs I_r  (Resistenza interna)"
+    label= "Dati (Resistenza interna)"
 )
 
 x_fit = np.linspace(0, I_r.max(), 200)
-y_fit = retta((I_r,V_r), x_fit)
+y_fit = retta((A, B), x_fit)
 ax1.plot(x_fit,y_fit, "b-", linewidth =1.5)
-
+ax1.set_xlabel(nomi[0])
+ax1.set_ylabel(nomi[1])
+ax1.set_title("Fit V_r(V) Vs T_r()")
+ax1.grid(True, alpha =0.3)
+ax1.legend()
 #GRAFICO RESIDUI
 ax2.axhline(0, color="black", linewidth=1)
 

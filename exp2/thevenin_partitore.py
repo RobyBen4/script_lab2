@@ -6,7 +6,7 @@ from scipy.odr import ODR, Model, RealData
 from scipy.stats import chi2
 from exp1.script_lab2 import ott_dati, consistenza, retta, residui_lin, fitODR, x_quadro, valuta_fit
 
-excel="/mnt/c/Users/giova/OneDrive - Università di Napoli Federico II/Lab2exp2.xlsx"
+excel="/mnt/c/Users/robyb/OneDrive - Università di Napoli Federico II/exp1_lab2.xlsx"
 (I_p,V_p,dI_p, dV_p),nomi=ott_dati(excel, foglio=2)
 
 (A,B), cov, (dA,dB)=fitODR(retta, I_p, V_p, dI_p, dV_p)
@@ -67,17 +67,21 @@ ax1.errorbar(
     xerr=dI_p, yerr=dV_p,
     fmt="o", color="blue", ecolor="blue",
     capsize=2, elinewidth=0.8, markersize=5, alpha=0.85,
-    label= "Fit V_p Vs I_p (Partitore resistivo)"
+    label= "Dati (Partitore resistivo)"
 )
 
 x_fit = np.linspace(0, I_p.max(), 200)
-y_fit = retta((I_p,V_p), x_fit)
+y_fit = retta((A,B), x_fit)
 ax1.plot(x_fit,y_fit, "b-", linewidth =1.5)
-
+ax1.set_xlabel(nomi[0])
+ax1.set_ylabel(nomi[1])
+ax1.set_title("Fit V_o(V) Vs I_p()")
+ax1.grid(True, alpha =0.3)
+ax1.legend()
 #GRAFICO RESIDUI
 ax2.axhline(0, color="black", linewidth=1)
 
-ax2.scatter(R, residui, color="blue", label="Residui del fit")
+ax2.scatter(I_p, residui, color="blue", label="Residui del fit")
 
 ax2.set_ylim(-10,10)
 ax2.set_xlabel(nomi[0])
