@@ -79,7 +79,7 @@ def fit(f, x, y,dy, stima=None):
     return popt, pcov, perr
 
 #---MODALITA DI FIT LINEARE CON ERRORI SOLO SU Y----
-def fit_lin_np(x, y, dy):
+def fit_lin(x, y, dy):
     par, cov = np.polyfit(x, y, deg=1, w=1/dy, cov="unscaled" )
     m, q = par
     dm, dq = np.sqrt(np.diag(cov))
