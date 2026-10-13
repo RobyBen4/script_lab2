@@ -1,4 +1,17 @@
 {
     "python-envs.defaultEnvManager": "ms-python.python:conda",
-    "python-envs.defaultPackageManager": "ms-python.python:conda"
+    "python-envs.defaultPackageManager": "ms-python.python:conda",
+
+    "python.defaultInterpreterPath": "python3",
+
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}"
+    ],
+
+    "python.testing.cwd": "${workspaceFolder}",
+    "terminal.integrated.cwd": "${workspaceFolder}",
+
+    "terminal.integrated.env.linux": {
+        "PYTHONPATH": "${workspaceFolder}"
+    }
 }
