@@ -148,7 +148,7 @@ if __name__ == "__main__":
     else:
         print("Fit non accettabile")
         
-    (m,q), cov_q, (dm,dq)fit(retta, i_m, v_m, di_m)
+    
     
     #---COEFFICIENTI DI CORRELAZIONE TRA I E V---
     rho_m = np.corrcoef(i_m, v_m)[0,1]
