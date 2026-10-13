@@ -6,7 +6,7 @@ from scipy.odr import ODR, Model, RealData
 from scipy.stats import chi2
 
 
-def ott_dati(excel,foglio):
+def ott_dati(excel,foglio=0):
     df = pd.read_excel(excel, sheet_name=foglio)
     x, y, dx, dy = df.to_numpy(dtype= "float").T
     labels = list(df.columns)
