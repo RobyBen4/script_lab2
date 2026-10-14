@@ -12,8 +12,7 @@ excel="/mnt/c/Users/giova/OneDrive - Università di Napoli Federico II/Lab2exp2.
 
 (A,B), cov, (dA,dB)=fit(retta, R, I, dI)
 
-R_star=-B/A
-
+R_star=-B/A-1
 dR_star=np.sqrt((1/A**2)*(dB**2)+(((B**2)/(A**4))*(dA**2)))+2*(-1/A)*(B/A**2)*cov[0,1]
 
 R_1=220
