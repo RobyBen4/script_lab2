@@ -4,12 +4,12 @@ from matplotlib import pyplot as plt
 from scipy.optimize import curve_fit
 from scipy.odr import ODR, Model, RealData
 from scipy.stats import chi2
-from exp1.script_lab2 import ott_dati, consistenza, retta, residui_lin, fitODR, x_quadro, valuta_fit
+from exp1.script_lab2 import ott_dati, consistenza, retta, residui_lin, fitODR, x_quadro, valuta_fit, dev_std_unif
 
-excel="/mnt/c/Users/robyb/OneDrive - Università di Napoli Federico II/exp1_lab2.xlsx"
+excel="/mnt/c/Users/robyb/OneDrive - Università di Napoli Federico II/exp_2.xlsx"
 (I_r,V_r,dI_r, dV_r),nomi=ott_dati(excel, foglio=1)
 
-(A,B), cov, (dA,dB)=fitODR(retta, I_r, V_r, dI_r, dV_r)
+(A,B), cov, (dA,dB)=fitODR(retta, I_r, V_r, dev_std_unif(dI_r), dev_std_unif(dV_r), stima = (-150, 10))
 
 #ZERO DELLA FUNZIONE
 I_cc_r=-B/A
@@ -19,7 +19,7 @@ dI_cc_r=np.sqrt((1/A**2)*(dB**2)+(((B**2)/(A**4))*(dA**2)))+2*(-1/A)*(B/A**2)*co
 #best fit
 retta_best=retta((A,B),I_r)
 #Test Chi Quadro
-chi=x_quadro(I_r, V_r, dI_r,dV_r, A, B)
+chi=x_quadro(I_r, V_r, dev_std_unif(dI_r),dev_std_unif(dV_r), A, B)
 ngl = np.size(I_r)-2
 chi_rid, esito_test=valuta_fit(chi,ngl,alpha=0.05)
 if esito_test:
@@ -29,8 +29,8 @@ else:
 
 
 V_0 =10 #Volt
-R_x =150 #ohm
-dr_x = 1 #da vedere nella parte del ponte
+R_x = 0.1478 #ohm
+dr_x = 0.002 #da vedere nella parte del ponte
 
 print(f"il generatore ideale nella configurazione con resistenza interna ε_T vale: ({B:.3f} +- {dB:.3f})V")
 print(f"la resistenza totale nella configurazione con resistenza interna R_T vale: ({A:.3f} +- {dA:.3f})Ω")
@@ -54,7 +54,7 @@ else:
     print("valori non compatibili")
 
 #RESIDUI
-residui=residui_lin(I_r,V_r,dI_r,dV_r,A,B)
+residui=residui_lin(I_r,V_r,dev_std_unif(dI_r), dev_std_unif(dV_r),A,B)
 
 #GRAFICO PLOT
 fig, (ax1,ax2) = plt.subplots(2, 1, figsize = (8,10), sharex=False)
@@ -62,12 +62,12 @@ fig, (ax1,ax2) = plt.subplots(2, 1, figsize = (8,10), sharex=False)
 ax1.errorbar(
     I_r, V_r,
     xerr=dI_r, yerr=dV_r,
-    fmt="o", color="blue", ecolor="blue",
+    fmt="o", color="red", ecolor="black",
     capsize=2, elinewidth=0.8, markersize=5, alpha=0.85,
     label= "Dati (Resistenza interna)"
 )
 
-x_fit = np.linspace(0, I_r.max(), 200)
+x_fit = np.linspace(I_r.min(), I_r.max(), 200)
 y_fit = retta((A, B), x_fit)
 ax1.plot(x_fit,y_fit, "b-", linewidth =1.5)
 ax1.set_xlabel(nomi[0])
@@ -78,9 +78,9 @@ ax1.legend()
 #GRAFICO RESIDUI
 ax2.axhline(0, color="black", linewidth=1)
 
-ax2.scatter(I_r, residui, color="blue", label="Residui del fit")
+ax2.scatter(I_r, residui, color="red", label="Residui del fit")
 
-ax2.set_ylim(-10,10)
+ax2.set_ylim(-2,2)
 ax2.set_xlabel(nomi[0])
 ax2.set_ylabel("Residui normalizzati")
 ax2.set_title("Grafico dei residui")

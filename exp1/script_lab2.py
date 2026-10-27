@@ -6,11 +6,17 @@ from scipy.odr import ODR, Model, RealData
 from scipy.stats import chi2
 
 
-def ott_dati(excel,foglio=0):
+def ott_dati(excel, foglio=0):
     df = pd.read_excel(excel, sheet_name=foglio)
-    par = df.to_numpy(dtype= "float").T
+
+    # Se alcune colonne non sono numeriche → converti virgole in punti
+    if not all(dtype.kind in "fi" for dtype in df.dtypes):
+        df = df.replace(",", ".", regex=True).astype(float)
+
+    par = df.to_numpy(dtype=float).T
     labels = list(df.columns)
     return par, labels
+
     
 def retta(P, x):
     return P[0]*x +P[1]
@@ -28,7 +34,7 @@ def residui_lin(x, y, dx, dy, m ,q):
 
 #----GRAFICO RESIDUI DI UN FIT CON ERRORE SOLO SU Y----
 def residui_y(y, f_teo, dy):
-    return (y-f_teo)/dy
+    return (y-f_teo)/np.sqrt(dy)
 
 
 
@@ -88,7 +94,7 @@ def fit_lin(x, y, dy):
 
 #---CHI2 CON SOLO ERRORI SU Y----
 def chi_quadro(f_teo, y, dy):
-    return np.sum((y-(f_teo))**2/dy**2)
+    return np.sum((y-(f_teo))**2/dy)
 
 #---TEST DI IPOTESI PER ACCETTARE O RIGETTARE IL FIT---
 def valuta_fit(chi2_val, nu, alpha=0.05):
