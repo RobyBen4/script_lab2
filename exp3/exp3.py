@@ -8,4 +8,4 @@ from exp1.script_lab2 import *
 
 #----CREAZIONE DEL PLOT DELL'ESPERIMENTO----
 figure, (ax1,ax2) = plt.subplots(2,1, figsize(8,10), sharex=False)
-print("ciao")
+print("ciao coglione")
