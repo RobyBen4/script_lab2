@@ -94,7 +94,7 @@ def fit_lin(x, y, dy):
 
 #---CHI2 CON SOLO ERRORI SU Y----
 def chi_quadro(f_teo, y, dy):
-    return np.sum((y-(f_teo))**2/dy)
+    return np.sum((y-(f_teo))**2/dy**2)
 
 #---TEST DI IPOTESI PER ACCETTARE O RIGETTARE IL FIT---
 def valuta_fit(chi2_val, nu, alpha=0.05):
