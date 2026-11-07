@@ -17,7 +17,9 @@ def ott_dati(excel, foglio=0):
     labels = list(df.columns)
     return par, labels
 
-    
+def parabola(P,x):
+    return P[0]*(x**2)+P[1]*x+P[2]
+
 def retta(P, x):
     return P[0]*x +P[1]
 
