@@ -38,7 +38,8 @@ def residui_lin(x, y, dx, dy, m ,q):
 def residui_y(y, f_teo, dy):
     return (y-f_teo)/np.sqrt(dy)
 
-
+def peso(dy):
+    return 1/dy**2
 
 #---MODALITA DI FIT NEL CASO DI ERRORI SIA SU X CHE SU Y, VA INSERITO UNA FUNZIONE CHE ABBIA COME UNICI ARGOMENTI LA TUPLA DEI PARAMETRI E UN ARRAY 
 # E INOLTRE VA SPECIFICATA UNA TUPLA CON UNA STIMA DEI PARAMETRI----
