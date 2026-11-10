@@ -23,6 +23,14 @@ def parabola(P,x):
 def retta(P, x):
     return P[0]*x +P[1]
 
+def intorno(x0,array,n):        
+    #GENERA UN INTORNO DI UN ARRAY DI N/2 PUNTI SIMMETRICI INTORNO A X0
+    indice_centrale = np.argmin(np.abs(x0 - array))
+
+    inizio = max(0, indice_centrale - n // 2)
+    fine = min(len(array), indice_centrale + (n + 1) // 2)
+    return array[inizio+1:fine]
+
 #---CHI2 CON ERRORI SULLA X----
 def x_quadro(x, y, dx, dy, m ,q ):
     residui = (y-m*x-q)**2
@@ -38,7 +46,8 @@ def residui_lin(x, y, dx, dy, m ,q):
 def residui_y(y, f_teo, dy):
     return (y-f_teo)/np.sqrt(dy)
 
-
+def peso(dy):
+    return 1/dy**2
 
 #---MODALITA DI FIT NEL CASO DI ERRORI SIA SU X CHE SU Y, VA INSERITO UNA FUNZIONE CHE ABBIA COME UNICI ARGOMENTI LA TUPLA DEI PARAMETRI E UN ARRAY 
 # E INOLTRE VA SPECIFICATA UNA TUPLA CON UNA STIMA DEI PARAMETRI----
