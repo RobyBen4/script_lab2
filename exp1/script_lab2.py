@@ -23,6 +23,14 @@ def parabola(P,x):
 def retta(P, x):
     return P[0]*x +P[1]
 
+def intorno(x0,array,n):        
+    #GENERA UN INTORNO DI UN ARRAY DI N/2 PUNTI SIMMETRICI INTORNO A X0
+    indice_centrale = np.argmin(np.abs(x0 - array))
+
+    inizio = max(0, indice_centrale - n // 2)
+    fine = min(len(array), indice_centrale + (n + 1) // 2)
+    return array[inizio+1:fine]
+
 #---CHI2 CON ERRORI SULLA X----
 def x_quadro(x, y, dx, dy, m ,q ):
     residui = (y-m*x-q)**2
